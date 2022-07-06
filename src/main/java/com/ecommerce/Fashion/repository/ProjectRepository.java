@@ -2,9 +2,14 @@ package com.ecommerce.Fashion.repository;
 
 import com.ecommerce.Fashion.entity.Project;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
+    Project findByProjectIdentifier(String projectIdentifier);
+
     @Override
-    Iterable<Project> findAllById(Iterable<Long> iterable);
+    Iterable<Project> findAll();
+
 }
