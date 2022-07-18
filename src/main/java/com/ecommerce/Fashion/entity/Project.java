@@ -1,6 +1,7 @@
 package com.ecommerce.Fashion.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -25,9 +26,14 @@ public class Project {
     @JsonFormat(pattern = "dd-mm-yyyy")
     private Date end_date;
     @JsonFormat(pattern = "dd-mm-yyyy")
+    @Column(updatable = false)
     private Date created_At;
     @JsonFormat(pattern = "dd-mm-yyyy")
     private Date updated_At;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+    @JsonIgnore
+    private Backlog backlog;
 
     @PrePersist
     protected void onCreate(){
@@ -101,5 +107,13 @@ public class Project {
 
     public void setUpdated_At(Date updated_At) {
         this.updated_At = updated_At;
+    }
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
     }
 }
