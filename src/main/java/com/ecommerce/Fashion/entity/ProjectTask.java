@@ -12,7 +12,7 @@ public class ProjectTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false)
+    @Column(updatable = false, unique = true)
     private String projectSequence;
     @NotBlank(message = "Please include a project summary")
     private String summary;
@@ -93,12 +93,12 @@ public class ProjectTask {
         this.dueDate = dueDate;
     }
 
-    public String getProjectIdentifer() {
+    public String getProjectIdentifier() {
         return projectIdentifier;
     }
 
-    public void setProjectIdentifer(String projectIdentifer) {
-        this.projectIdentifier = projectIdentifer;
+    public void setProjectIdentifier(String projectIdentifier) {
+        this.projectIdentifier = projectIdentifier;
     }
 
     public Date getCreate_At() {

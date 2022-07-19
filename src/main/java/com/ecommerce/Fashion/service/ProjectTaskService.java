@@ -1,9 +1,11 @@
 package com.ecommerce.Fashion.service;
 
 import com.ecommerce.Fashion.entity.Backlog;
+import com.ecommerce.Fashion.entity.Project;
 import com.ecommerce.Fashion.entity.ProjectTask;
 import com.ecommerce.Fashion.exception.ProjectNotFoundException;
 import com.ecommerce.Fashion.repository.BacklogRepository;
+import com.ecommerce.Fashion.repository.ProjectRepository;
 import com.ecommerce.Fashion.repository.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,35 +20,33 @@ public class ProjectTaskService {
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask){
 
-        //Exceptions: Project not found
 
         try {
 
-            //PTs to be added to a specific project, project != null, BL exists
+
             Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
-            //set the bl to pt
+
             projectTask.setBacklog(backlog);
-            //we want our project sequence to be like this: IDPRO-1  IDPRO-2  ...100 101
+
             Integer backlogSequence = backlog.getPTSequence();
-            // Update the BL SEQUENCE
+
             backlogSequence++;
 
             backlog.setPTSequence(backlogSequence);
 
-            //Add Sequence to Project Task
             projectTask.setProjectSequence(backlog.getProjectIdentifier()+"-"+backlogSequence);
-            projectTask.setProjectIdentifer(projectIdentifier);
+            projectTask.setProjectIdentifier(projectIdentifier);
 
-            //INITIAL priority when priority null
-
-            //INITIAL status when status is null
             if(projectTask.getStatus()==""|| projectTask.getStatus()==null){
                 projectTask.setStatus("TO_DO");
             }
 
-            if(projectTask.getPriority()==null){ //In the future we need projectTask.getPriority()== 0 to handle the form
+            if(projectTask.getPriority()==null){
                 projectTask.setPriority(3);
             }
 
@@ -58,6 +58,49 @@ public class ProjectTaskService {
     }
 
     public Iterable<ProjectTask>findBacklogById(String id){
+        Project project = projectRepository.findByProjectIdentifier(id);
+
+        if(project == null){
+            throw new ProjectNotFoundException("Project with ID: '"+id+"' does not exist");
+        }
         return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
     }
+
+    public ProjectTask findProjectTaskByProjectSquence(String backlog_id , String sequence){
+
+        //make sure are searching on the right backlog
+        Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
+        if(backlog == null){
+            throw  new ProjectNotFoundException("Project with ID: '"+backlog_id+"' does not exist");
+        }
+
+        //make sure that our task exists
+        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(sequence);
+        if(projectTask == null){
+            throw new ProjectNotFoundException("Project Task: '"+sequence+"' not Found");
+        }
+
+        //make sure that the backlog/project id in the path correspons to the right project
+        //assurez-vous que l'identifiant du backlog/projet dans le chemin correspond au bon projet
+        if(!projectTask.getProjectIdentifier().equals(backlog_id)){
+            throw new ProjectNotFoundException("Project Task: '"+sequence+"' does not exist in project: '"+backlog_id);
+        }
+
+        return projectTask;
+    }
+
+    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String baclog_id, String projectTask_id){
+        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectTask_id);
+
+        projectTask = updatedTask;
+
+        return projectTaskRepository.save(projectTask);
+    }
+    //Update project task
+
+    //find existing project task
+
+    //replace it with updated task
+
+    //save update
 }
