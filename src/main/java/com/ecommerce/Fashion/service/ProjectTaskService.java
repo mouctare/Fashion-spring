@@ -10,6 +10,8 @@ import com.ecommerce.Fashion.repository.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class ProjectTaskService {
@@ -90,11 +92,23 @@ public class ProjectTaskService {
     }
 
     public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String baclog_id, String projectTask_id){
-        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectTask_id);
+        ProjectTask projectTask = findProjectTaskByProjectSquence(baclog_id, projectTask_id);
 
         projectTask = updatedTask;
 
         return projectTaskRepository.save(projectTask);
+    }
+
+    public void deleteProjectTaskByProjectSequence(String baclog_id, String projectTask_id){
+        ProjectTask projectTask = findProjectTaskByProjectSquence(baclog_id, projectTask_id);
+
+        //On supprime un élément dans une liste
+        Backlog backlog = projectTask.getBacklog();
+        List<ProjectTask> projectTasks = backlog.getProjectTasks();
+        projectTasks.remove(projectTask);
+        backlogRepository.save(backlog);
+
+        projectTaskRepository.delete(projectTask);
     }
     //Update project task
 
