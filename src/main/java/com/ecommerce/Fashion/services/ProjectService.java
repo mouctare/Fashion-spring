@@ -1,14 +1,15 @@
-package com.ecommerce.Fashion.service;
+package com.ecommerce.Fashion.services;
 
 import com.ecommerce.Fashion.entity.Backlog;
 import com.ecommerce.Fashion.entity.Project;
 import com.ecommerce.Fashion.exception.ProjectIdException;
-import com.ecommerce.Fashion.repository.BacklogRepository;
-import com.ecommerce.Fashion.repository.ProjectRepository;
+import com.ecommerce.Fashion.repositories.BacklogRepository;
+import com.ecommerce.Fashion.repositories.ProjectRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import javax.validation.Valid;
 
 @Service
 public class ProjectService {
@@ -19,20 +20,23 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
-    public Project saveOrUpdateProject(Project project){
+    public Project saveOrUpdateProject(@Valid Project project){
         try{
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
-            if(project.getId() ==null){
+            if(project.getId()==null){
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
                 backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
             }
-            if(project.getId() !=null){
+
+            if(project.getId()!=null){
                 project.setBacklog(backlogRepository.findByProjectIdentifier(project.getProjectIdentifier().toUpperCase()));
             }
+
             return projectRepository.save(project);
+
         }catch (Exception e){
             throw new ProjectIdException("Project ID '"+project.getProjectIdentifier().toUpperCase()+"' already exists");
         }

@@ -1,4 +1,5 @@
-package com.ecommerce.Fashion.repository;
+package com.ecommerce.Fashion.repositories;
+
 
 import com.ecommerce.Fashion.entity.Project;
 import org.springframework.data.repository.CrudRepository;
