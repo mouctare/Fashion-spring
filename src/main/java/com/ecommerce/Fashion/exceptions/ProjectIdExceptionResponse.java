@@ -1,10 +1,10 @@
-package com.ecommerce.Fashion.exception;
+package com.ecommerce.Fashion.exceptions;
 
 public class ProjectIdExceptionResponse {
 
     private String projectIdentifier;
 
-    public ProjectIdExceptionResponse(String projectIdentifier){
+    public ProjectIdExceptionResponse(String projectIdentifier) {
         this.projectIdentifier = projectIdentifier;
     }
 

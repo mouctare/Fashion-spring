@@ -2,7 +2,7 @@ package com.ecommerce.Fashion.services;
 
 
 import com.ecommerce.Fashion.entity.User;
-import com.ecommerce.Fashion.exception.UsernameAlreadyExistsException;
+import com.ecommerce.Fashion.exceptions.UsernameAlreadyExistsException;
 import com.ecommerce.Fashion.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

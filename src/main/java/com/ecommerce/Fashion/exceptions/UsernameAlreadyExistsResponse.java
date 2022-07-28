@@ -1,10 +1,10 @@
-package com.ecommerce.Fashion.exception;
+package com.ecommerce.Fashion.exceptions;
 
-public class UserNameAlreadyExistsResponse {
+public class UsernameAlreadyExistsResponse {
 
     private String username;
 
-    public UserNameAlreadyExistsResponse(String username) {
+    public UsernameAlreadyExistsResponse(String username) {
         this.username = username;
     }
 

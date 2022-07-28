@@ -3,7 +3,7 @@ package com.ecommerce.Fashion.services;
 import com.ecommerce.Fashion.entity.Backlog;
 import com.ecommerce.Fashion.entity.Project;
 import com.ecommerce.Fashion.entity.ProjectTask;
-import com.ecommerce.Fashion.exception.ProjectNotFoundException;
+import com.ecommerce.Fashion.exceptions.ProjectNotFoundException;
 import com.ecommerce.Fashion.repositories.BacklogRepository;
 import com.ecommerce.Fashion.repositories.ProjectRepository;
 import com.ecommerce.Fashion.repositories.ProjectTaskRepository;

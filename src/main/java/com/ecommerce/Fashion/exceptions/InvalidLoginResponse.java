@@ -1,4 +1,4 @@
-package com.ecommerce.Fashion.exception;
+package com.ecommerce.Fashion.exceptions;
 
 public class InvalidLoginResponse {
     private String username;
