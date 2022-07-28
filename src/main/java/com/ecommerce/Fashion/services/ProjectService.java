@@ -2,10 +2,13 @@ package com.ecommerce.Fashion.services;
 
 import com.ecommerce.Fashion.entity.Backlog;
 import com.ecommerce.Fashion.entity.Project;
+import com.ecommerce.Fashion.entity.User;
 import com.ecommerce.Fashion.exception.ProjectIdException;
+import com.ecommerce.Fashion.exception.ProjectNotFoundException;
 import com.ecommerce.Fashion.repositories.BacklogRepository;
 import com.ecommerce.Fashion.repositories.ProjectRepository;
 
+import com.ecommerce.Fashion.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +23,16 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
-    public Project saveOrUpdateProject(@Valid Project project){
+    @Autowired
+    private UserRepository userRepository;
+
+    public Project saveOrUpdateProject(@Valid Project project, String username){
         try{
+            // On fait la realtion avec l'utilisateur qui a crée le projet
+            User user = userRepository.findByUsername(username);
+
+            project.setUser(user);
+            project.setProjectLeader(user.getUsername());
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
             if(project.getId()==null){
@@ -44,21 +55,25 @@ public class ProjectService {
     }
 
 
-    public Project findProjectByIdentifier(String projectId){
+    public Project findProjectByIdentifier(String projectId, String username){
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
         if(project == null){
             throw new ProjectIdException("Project ID '"+projectId+"' does not exist");
-
         }
 
+        //On compare le nom de l'utilisateur à celui reçu en argument
+
+        if(!project.getProjectLeader().equals(username)){
+            throw new ProjectNotFoundException("Project not found in your account");
+        }
 
         return project;
     }
 
-    public Iterable<Project> findAllProjects(){
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username){
+        return projectRepository.findAllByProjectLeader(username);
     }
 
 
